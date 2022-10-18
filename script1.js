@@ -44,8 +44,7 @@ if (nuevo_usuario) {
     if (user && password && mail){ 
 
         usuario2.bienvenida();
-        todos_los_usuarios.push(usuario2);
-        alert (todos_los_usuarios);        
+        todos_los_usuarios.push(usuario2);        
         carrito = confirm("Desea iniciar un nuevo carrito?");
         
         if (!carrito) {
@@ -97,29 +96,30 @@ if (carrito) {
 
 
     }  
-      
+   
+    let eliminar = confirm ("Desea quitar algun producto del carrito?");
 
-}
+    while (eliminar) {
 
-let eliminar = confirm ("Desea quitar algun producto del carrito?");
+        quitar_producto ();
+        eliminar = confirm ("Desea quitar otro producto del carrito?");
 
-while (eliminar) {
+    }
 
-    quitar_producto ();
-    eliminar = confirm ("Desea quitar otro producto del carrito?");
-
- }
-
-if (!eliminar) {
+    if (!eliminar) {
 
     arreglo_carrito.forEach(
         (el) => {
             alert ("Su carrito esta integrado por los siguientes productos:\n Producto: "+el.producto+" Precio: "+el.precio+" Cantidad: "+el.cantidad);
         }
-    )
-    alert ("El costo total de su carrito es:\n$"+arreglo_carrito.reduce((acumulador, el)=> acumulador + el.precio * el.cantidad, 0));
+        )
+        alert ("El costo total de su carrito es:\n$"+arreglo_carrito.reduce((acumulador, el)=> acumulador + el.precio * el.cantidad, 0));
+
+    }
 
 }
+
+
 
 
 
