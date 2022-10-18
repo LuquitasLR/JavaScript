@@ -79,3 +79,15 @@ function agregar_al_carrito (cod,cantidad) {
 
 }
 
+function quitar_producto(){
+    const producto_a_quitar = parseInt(prompt("Ingrese el código del producto que desea eliminar del carrito."));
+    const existe_producto = arreglo_carrito.some((el) => el.codigo === producto_a_quitar );
+
+    if(existe_producto){
+        const index_producto= arreglo_carrito.indexOf((el) => el.producto_a_quitar );
+        arreglo_carrito.splice(index_producto, 1);
+    }else{
+        alert("El código ingresado no corresponde a un producto que este en el carrito");
+    }
+}
+
