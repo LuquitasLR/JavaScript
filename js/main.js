@@ -18,9 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 let boton = document.getElementById("boton_buscar");
 
-busqueda = () => {
+boton.addEventListener("click",buscar);
 
-
+function buscar () {
+    value = document.querySelector("#serch_value").value;
+    let resultado = arreglo_productos.filter ((art) => art.producto.toLowerCase().includes(value.toLowerCase()));
+    cargar_productos (resultado);
 }
 
 

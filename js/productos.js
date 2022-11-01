@@ -29,8 +29,6 @@ const arreglo_productos = [
     }
 ]
 
-let cantidad =1;
-
 class producto {
 
     constructor (codigo,producto,precio,imagen,cantidad) {
@@ -82,15 +80,6 @@ class gestion_productos {
             alert ("No se encontraron productos disponibles")
         }
     }
-
-
-    
-    buscar () {
-        value = document.getElementById("serch_value").textContent;
-        let resultado = arreglo_productos.filter (art => art.producto.tolower.toLowerCase().includes (value.toLowerCase));
-        this.cargar_productos =(resultado)
-    }
-
     
 }
 
@@ -99,20 +88,30 @@ function mostrar_carrito () {
     const lista_carrito = document.querySelector("#carrito");
 
     lista_carrito.innerHTML="";
+
+        if (arreglo_carrito.length != 0) {
+
+            arreglo_carrito.forEach((producto) => {
+                let art = document.createElement("article");
+                art.classList.add("texto_articulos", "article_style");
+                art.setAttribute("id","cart"+producto.codigo);
+  
+                    art.innerHTML= `<div class="imagen_producto padding"><img src=${producto.imagen} width="100" ></div>
+                    <div><h3 class="text-m","padding" >${producto.producto}</h3><h3 class="text-s">Precio: ${producto.precio}</h3></div>
+                    <div><h4 class="text-s">Cantidad: ${producto.cantidad}</h4></div>
+                    <a href="javascript:eliminar_carrito(${producto.codigo})"><div class="boton margin eliminar">ELIMINAR ARTICULO</div></a>`;
+  
+                    lista_carrito.appendChild (art);
+  
+            })
+
+        }else {
+
+            lista_carrito.innerHTML= `<h3 class="text-m" >Tu carrito esta vacio...</h3>`;
+
+        }
     
-      arreglo_carrito.forEach((producto) => {
-              let art = document.createElement("article");
-              art.classList.add("texto_articulos", "article_style");
-              art.setAttribute("id","cart"+producto.codigo);
-
-                  art.innerHTML= `<div class="imagen_producto padding"><img src=${producto.imagen} width="100" ></div>
-                  <div><h3 class="text-m","padding" >${producto.producto}</h3><h3 class="text-s">Precio: ${producto.precio}</h3></div>
-                  <div><h4 class="text-s">Cantidad: ${producto.cantidad}</h4></div>
-                  <a href="javascript:eliminar_carrito(${producto.codigo})"><div class="boton margin eliminar">ELIMINAR ARTICULO</div></a>`;
-
-                  lista_carrito.appendChild (art);
-
-      })
+      
 
 
 }
@@ -120,25 +119,19 @@ function mostrar_carrito () {
 
 function agregar_carrito (cod) {
 
-    const prod= document.querySelector("#art"+cod);
-    let resultado = arreglo_carrito.some((art) => art.codigo ==cod);
+    let resultado = arreglo_carrito.some((art) => art.codigo ===cod);
     if (resultado == false) {
-
-        let productos = new producto (   cod, 
-            prod.querySelector("h3").textContent,
-            prod.querySelector("h4").textContent,
-            prod.querySelector("img").src,
-            1 
-
-        );
-
-        producto_agregado (productos);
+        let producto = arreglo_productos.find ((el) => el.codigo ===cod);
+        arreglo_carrito.push(producto);
+        alert("Producto agregado!");
         mostrar_carrito ();
         guardar_carrito ();
         actualizar_contador();
 
     }else{
 
+        // No encontre la manera de tomar el objeto del array y modificarle su cantidad, asique opte por eliminarlo y agregar un objeto nuevo con la cantidad aumentada.
+        
         let resultado = arreglo_carrito.find((producto) => producto.codigo == cod);
         let producto_actualizado = new producto (resultado.codigo, resultado.producto, resultado.precio, resultado.imagen, resultado.cantidad+1);
         let index = arreglo_carrito.findIndex((object) => {
@@ -156,13 +149,6 @@ function agregar_carrito (cod) {
 
 }
 
-function producto_agregado (productos) {
-
-    arreglo_carrito.push(productos);
-    alert("Producto agregado!");
-
-
-}
 
 function eliminar_carrito (cod) {
     let confirmar = confirm("Desea eliminar este producto?")
@@ -208,4 +194,32 @@ function contador_carrito () {
 
     return cantidad_total;
 
+}
+
+function cargar_productos (productos) {
+
+    const lista_productos= document.querySelector("#articulos")
+
+    lista_productos.innerHTML="";
+
+    if (productos.length !=0) {
+
+        lista_productos.classList.add("section_catalogo","article_box");
+    
+        productos.forEach ( (producto) => {
+            let art = document.createElement("article");
+            art.classList.add("texto_articulos", "article_style");
+            art.setAttribute("id","art"+producto.codigo);
+    
+            art.innerHTML =    `<div class="imagen_producto padding"><img src=${producto.imagen} width="200" ></div>
+                                <div><h3 class="text-m","padding" >${producto.producto}</h3><h4 class="text-s">Precio: ${producto.precio}</h4></div>
+                                <a href="javascript:agregar_carrito(${producto.codigo})"><div class="boton margin">AGREGAR AL CARRITO</div></a>`;
+    
+        
+        lista_productos.appendChild (art);
+        }
+        )
+    }else{
+        lista_productos.innerHTML=`<h3>No se encotraron productos con esas caracteristicas.</h3>`;
+    }
 }
