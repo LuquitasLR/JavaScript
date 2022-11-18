@@ -3,49 +3,49 @@
         {   "codigo": 1,
             "producto": "Buzo con capucha",
             "precio": 4500,
-            "imagen":"./imagenes/articulos/buzo.png"
+            "imagen":"../imagenes/articulos/buzo.png"
         },
         {
             "codigo": 2,
             "producto": "Jogger",
             "precio": 3100,
-            "imagen":"./imagenes/articulos/jogger.png"
+            "imagen":"../imagenes/articulos/jogger.png"
         },   
         {
             "codigo": 3,
             "producto": "Remera blanca",
             "precio": 2250,
-            "imagen":"./imagenes/articulos/remera-blanca.jpg"
+            "imagen":"../imagenes/articulos/remera-blanca.jpg"
         },
         {
             "codigo": 4,
             "producto": "Gorra NY",
             "precio": 1900,
-            "imagen":"./imagenes/articulos/gorra.png"
+            "imagen":"../imagenes/articulos/gorra.png"
         },
         {
             "codigo": 5,
             "producto": "Buzo con capucha",
             "precio": 4500,
-            "imagen":"./imagenes/articulos/buzo2.png"
+            "imagen":"../imagenes/articulos/buzo2.png"
         },
         {
             "codigo": 6,
             "producto": "Jogger",
             "precio": 3500,
-            "imagen":"./imagenes/articulos/jogger2.png"
+            "imagen":"../imagenes/articulos/jogger2.png"
         },
         {
             "codigo": 7,
             "producto": "Remera negra",
             "precio": 2250,
-            "imagen":"./imagenes/articulos/remera-negra.jpg"
+            "imagen":"../imagenes/articulos/remera-negra.jpg"
         },
         {
             "codigo": 8,
             "producto": "Gorra Everlast",
             "precio": 2150,
-            "imagen":"./imagenes/articulos/gorra2.png"
+            "imagen":"../imagenes/articulos/gorra2.png"
         }
     ]
 }
