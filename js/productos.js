@@ -1,58 +1,24 @@
-const arreglo_productos = [
-    {   codigo: 1,
-        producto: "Buzo con capucha",
-        precio: 4500,
-        imagen:"./imagenes/buzo.png",
-        cantidad:1,
-    },
-    {
-        codigo: 2,
-        producto: "Jogger",
-        precio: 3000,
-        imagen:"./imagenes/jogger.png",
-        cantidad:1,
-    },
-    
-    {
-        codigo: 3,
-        producto: "Remera blanca",
-        precio: 2000,
-        imagen:"./imagenes/remera-blanca.jpg",
-        cantidad:1,
-    },
-    {
-        codigo: 4,
-        producto: "Remera negra",
-        precio: 2000,
-        imagen:"./imagenes/remera-negra.jpg",
-        cantidad:1,
-    }
-]
-
-class producto {
-
-    constructor (codigo,producto,precio,imagen,cantidad) {
-
-        this.codigo=codigo;
-        this.producto=producto;
-        this.precio=precio;
-        this.imagen=imagen;
-        this.cantidad=cantidad;
-
-    }
-
-
-}
-
+let arreglo_productos =[];
 class gestion_productos {
 
     inicio () {
-    
-        this.cargar_productos (arreglo_productos);
+        const url = '../json/productos.json';
+        fetch (url)
+        .then( resp => resp.json())
+        .then(resultado => {
+
+          arreglo_productos = resultado.arreglo_productos;
+
+            this.cargar_productos(arreglo_productos);
+        })
+
+
         mostrar_carrito (arreglo_carrito);
         actualizar_contador ();
+        suma_carrito ();
 
     }
+
     cargar_productos (productos) {
 
         const lista_productos= document.querySelector("#articulos")
@@ -69,7 +35,7 @@ class gestion_productos {
                 art.setAttribute("id","art"+producto.codigo);
         
                 art.innerHTML =    `<div class="imagen_producto padding"><img src=${producto.imagen} width="200" ></div>
-                                    <div><h3 class="text-m","padding" >${producto.producto}</h3><h4 class="text-s">Precio: ${producto.precio}</h4></div>
+                                    <div><h3 class="text-m","padding" >${producto.producto}</h3><h4 class="text-s">Precio: $${producto.precio}</h4></div>
                                     <a href="javascript:agregar_carrito(${producto.codigo})"><div class="boton margin">AGREGAR AL CARRITO</div></a>`;
         
             
@@ -89,60 +55,57 @@ function mostrar_carrito () {
 
     lista_carrito.innerHTML="";
 
-        if (arreglo_carrito.length != 0) {
+    if (arreglo_carrito.length != 0) {
 
-            arreglo_carrito.forEach((producto) => {
-                let art = document.createElement("article");
-                art.classList.add("texto_articulos", "article_style");
-                art.setAttribute("id","cart"+producto.codigo);
+        arreglo_carrito.forEach((producto) => {
+            let art = document.createElement("article");
+            art.classList.add("texto_articulos", "article_style");
+            art.setAttribute("id","cart"+producto.codigo);
   
                     art.innerHTML= `<div class="imagen_producto padding"><img src=${producto.imagen} width="100" ></div>
-                    <div><h3 class="text-m","padding" >${producto.producto}</h3><h3 class="text-s">Precio: ${producto.precio}</h3></div>
+                    <div><h3 class="text-m","padding" >${producto.producto}</h3><h3 class="text-s">Precio: $${producto.precio}</h3></div>
                     <div><h4 class="text-s">Cantidad: ${producto.cantidad}</h4></div>
                     <a href="javascript:eliminar_carrito(${producto.codigo})"><div class="boton margin eliminar">ELIMINAR ARTICULO</div></a>`;
   
                     lista_carrito.appendChild (art);
   
-            })
+        })
 
-        }else {
+    }else {
 
-            lista_carrito.innerHTML= `<h3 class="text-m" >Tu carrito esta vacio...</h3>`;
+        lista_carrito.innerHTML= `<h3 class="text-m" >Tu carrito esta vacio...</h3>`;
 
-        }
+    }
     
-      
-
 
 }
 
-
+// FUncion para agregar productos al carrito.
 function agregar_carrito (cod) {
 
     let resultado = arreglo_carrito.some((art) => art.codigo ===cod);
     if (resultado == false) {
         let producto = arreglo_productos.find ((el) => el.codigo ===cod);
+        producto.cantidad =1;
         arreglo_carrito.push(producto);
-        alert("Producto agregado!");
+        sweet_alert("Producto agregado!");
         mostrar_carrito ();
         guardar_carrito ();
         actualizar_contador();
+        suma_carrito ();
 
     }else{
 
-        // No encontre la manera de tomar el objeto del array y modificarle su cantidad, asique opte por eliminarlo y agregar un objeto nuevo con la cantidad aumentada.
+        let i = arreglo_carrito.findIndex((object) => {
+            return object.codigo === cod;
+        });
         
-        let resultado = arreglo_carrito.find((producto) => producto.codigo == cod);
-        let producto_actualizado = new producto (resultado.codigo, resultado.producto, resultado.precio, resultado.imagen, resultado.cantidad+1);
-        let index = arreglo_carrito.findIndex((object) => {
-            return object.codigo == cod;
-          });
-        arreglo_carrito.splice(index,1);
-        arreglo_carrito.push (producto_actualizado);
+        arreglo_carrito[i].cantidad ++;
         mostrar_carrito ();
         guardar_carrito ();
         actualizar_contador();
-        alert("Cantidad de "+resultado.producto+" actualizada!")
+        sweet_alert("Cantidad de "+arreglo_carrito[i].producto+" actualizada!");
+        suma_carrito ();
     }
 
 
@@ -151,19 +114,27 @@ function agregar_carrito (cod) {
 
 
 function eliminar_carrito (cod) {
-    let confirmar = confirm("Desea eliminar este producto?")
-    if (confirmar) {
-
-        let index = arreglo_carrito.findIndex((object) => {
+    Swal.fire({
+        confirmButtonColor: "#a82492",
+        cancelButtonColor: "#a82492",
+        confirmButtonText: 'Si, eliminar',
+        title: 'Desea eliminar este artículo?',
+        background: 'rgb(58, 58, 58)',
+        color: 'rgb(255, 255, 255)',
+      }).then((result) => {
+        if (result.isConfirmed) {
+            let index = arreglo_carrito.findIndex((object) => {
             return object.codigo == cod;
-          });
-        arreglo_carrito.splice(index,1);
-        mostrar_carrito ();
-        guardar_carrito ();
-        actualizar_contador();
- 
-    }
-    
+            });
+            arreglo_carrito.splice(index,1);
+            mostrar_carrito ();
+            guardar_carrito ();
+            actualizar_contador();
+            sweet_alert ("Articulo eliminado");
+            suma_carrito ();
+        }
+    })
+
 }
 
 function guardar_carrito () {
@@ -171,6 +142,9 @@ function guardar_carrito () {
     localStorage.setItem("arreglo_carrito", JSON.stringify(arreglo_carrito));
 
 }
+
+// Esta funcion y la siguiente se encargan de sumar la cantidad total de artiuclos en el carrito 
+// y mostrarla en la parte inferior derecha de la página.
 
 function actualizar_contador () {
 
@@ -183,6 +157,7 @@ function actualizar_contador () {
 
 
 }
+
 function contador_carrito () {
 
     let cantidad_total = 0;
@@ -195,7 +170,7 @@ function contador_carrito () {
     return cantidad_total;
 
 }
-
+// creamos la funcion para cargar los productos en la página
 function cargar_productos (productos) {
 
     const lista_productos= document.querySelector("#articulos")
@@ -222,4 +197,41 @@ function cargar_productos (productos) {
     }else{
         lista_productos.innerHTML=`<h3>No se encotraron productos con esas caracteristicas.</h3>`;
     }
+}
+
+function sweet_alert (texto) {
+
+    Toastify({
+        text: texto,
+        duration: 1500,
+        style: {
+            background: "#a82492",
+        }
+        
+      }).showToast();
+}
+
+function suma_carrito () {
+
+    const suma_parcial = document.querySelector("#total_carrito");
+
+    suma_parcial.innerHTML="";
+    suma_parcial.classList.remove("total_carrito");
+
+    /* creamos un apartado donde aparezca el total del carrito en pesos siempre que haya un articulo en el carrito */
+
+    if (arreglo_carrito.length > 0) {
+
+     const total_carrito =  arreglo_carrito.reduce ((acumulador, el) => acumulador + el.cantidad * el.precio, 0 );
+     let suma_total= document.createElement("div");
+     suma_parcial.classList.add("total_carrito");
+     suma_total.innerHTML= `<h3 class="text-m" >Total carrito: $${total_carrito}</h3>`;
+     
+     suma_parcial.appendChild(suma_total);
+
+    }
+
+    
+
+
 }
