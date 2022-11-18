@@ -2,7 +2,7 @@ let arreglo_productos =[];
 class gestion_productos {
 
     inicio () {
-        const url = './json/productos.json';
+        const url = './js/productos.json';
         fetch (url)
         .then( resp => resp.json())
         .then(resultado => {
